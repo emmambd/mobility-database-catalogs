@@ -184,7 +184,7 @@ jobs:
               os.makedirs(os.path.dirname(zip_path), exist_ok=True)
 
               try:
-                  zip_file_req = requests.get(url, params=params, headers=headers, allow_redirects=True cert=REQUESTS_CA_BUNDLE)
+                  zip_file_req = requests.get(url, params=params, headers=headers, allow_redirects=True, cert=REQUESTS_CA_BUNDLE)
                   zip_file_req.raise_for_status()
               except Exception as e:
                   raise Exception(
