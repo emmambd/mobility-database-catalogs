@@ -110,7 +110,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set env
-        run: echo "REQUESTS_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"" >> $GITHUB_ENV
+        run: echo "{REQUESTS_CA_BUNDLE}={"/etc/ssl/certs/ca-certificates.crt"} >> $GITHUB_ENV
       - name: Test
         run: echo $REQUESTS_CA_BUNDLE
       - name: Set up Python 3.9
@@ -184,7 +184,7 @@ jobs:
               os.makedirs(os.path.dirname(zip_path), exist_ok=True)
 
               try:
-                  zip_file_req = requests.get(url, params=params, headers=headers, allow_redirects=True)
+                  zip_file_req = requests.get(url, params=params, headers=headers, allow_redirects=True cert=REQUESTS_CA_BUNDLE)
                   zip_file_req.raise_for_status()
               except Exception as e:
                   raise Exception(
