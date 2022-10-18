@@ -109,6 +109,10 @@ jobs:
       matrix: ${{ fromJson(needs.get-urls.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v2
+      - name: Set env
+        run: echo "REQUESTS_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt" >> $GITHUB_ENV
+      - name: Test
+        run: echo $REQUESTS_CA_BUNDLE
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
@@ -125,6 +129,7 @@ jobs:
           sudo apt-get install libspatialindex-dev
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Validate and download the datasets
+        run: |
         shell: python
         env:
           API_SOURCE_SECRETS: ${{ secrets.API_SOURCE_SECRETS }}
@@ -137,7 +142,6 @@ jobs:
           # OS constants
           ROOT = os.getcwd()
           DATASETS = "datasets"
-          REQUESTS_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt"
 
           # Jobs constants
           BASE = "base"
@@ -181,7 +185,7 @@ jobs:
               os.makedirs(os.path.dirname(zip_path), exist_ok=True)
 
               try:
-                  zip_file_req = requests.get(url, params=params, headers=headers, allow_redirects=True, cert=REQUESTS_CA_BUNDLE)
+                  zip_file_req = requests.get(url, params=params, headers=headers, allow_redirects=True)
                   zip_file_req.raise_for_status()
               except Exception as e:
                   raise Exception(
